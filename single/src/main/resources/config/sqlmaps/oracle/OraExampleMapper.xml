@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.vitamin.single.mapper.oracle.exampleMapper">
+
+	<insert id="insertPnrRawData" parameterType="hashmap">
+		INSERT INTO PNR_RAW_DATA (  PRD_ID
+		                          , PRD_PCD_ID
+		                          , PRD_TRL_ID
+		                          , PRD_ORIGIN
+		                          , PRD_RAW_PNR
+		                          , PRD_CRE_AGT_CODE
+		                          , PRD_CRE_ID
+		                          , PRD_CRE_NAME
+		                          , PRD_CRE_DATE
+		                          , PRD_LAST_AGT_CODE
+		                          , PRD_LAST_ID
+		                          , PRD_LAST_NAME
+		                          , PRD_LAST_DATE
+		                          ) VALUES (  #{prdId}
+		                                    , #{prdPcdId}
+		                                    , (SELECT MAX(TRL_ID) FROM TKT_REQUEST_LIST WHERE TRL_HREV_CODE = (SELECT PCD_TRL_HREV_CODE FROM PNR_COMMON_DATA WHERE PCD_ID = #{prdId}))
+		                                    , #{prdOrigin}
+		                                    , ' '
+		                                    , #{prdCreAgtCode}
+		                                    , #{prdCreId}
+		                                    , #{prdCreName}
+		                                    , sysdate
+		                                    , #{prdLastAgtCode}
+		                                    , #{prdLastId}
+		                                    , #{prdLastName}
+		                                    , sysdate
+		                                    )
+	</insert>
+	
+	<update id = "updatePnrRawData" parameterType="hashmap">
+		UPDATE PNR_RAW_DATA 
+		   SET PRD_RAW_PNR = #{prdRawPnr}
+		 WHERE PRD_ID = #{prdId}
+	</update>
+
+	<insert id="insertPnrRawDataClob" parameterType="hashmap">
+		INSERT INTO PNR_RAW_DATA_CLOB (  PRD_ID
+		                          , PRD_PCD_ID
+		                          , PRD_TRL_ID
+		                          , PRD_ORIGIN
+		                          , PRD_RAW_PNR
+		                          , PRD_CRE_AGT_CODE
+		                          , PRD_CRE_ID
+		                          , PRD_CRE_NAME
+		                          , PRD_CRE_DATE
+		                          , PRD_LAST_AGT_CODE
+		                          , PRD_LAST_ID
+		                          , PRD_LAST_NAME
+		                          , PRD_LAST_DATE
+		                          ) VALUES (  #{prdId}
+		                                    , #{prdPcdId}
+		                                    , (SELECT MAX(TRL_ID) FROM TKT_REQUEST_LIST WHERE TRL_HREV_CODE = (SELECT PCD_TRL_HREV_CODE FROM PNR_COMMON_DATA WHERE PCD_ID = #{prdId}))
+		                                    , #{prdOrigin}
+		                                    , #{prdRawPnr, jdbcType=CLOB, javaType=java.lang.String}
+		                                    , #{prdCreAgtCode}
+		                                    , #{prdCreId}
+		                                    , #{prdCreName}
+		                                    , sysdate
+		                                    , #{prdLastAgtCode}
+		                                    , #{prdLastId}
+		                                    , #{prdLastName}
+		                                    , sysdate
+		                                    )
+	</insert>
+
+
+	<insert id="insertPnrRawDataDeclare" parameterType="hashmap">
+		Declare
+			lv_prdRawPnr PNR_RAW_DATA.PRD_RAW_PNR%Type;
+		Begin
+			lv_prdRawPnr := #{prdRawPnr};
+			
+			INSERT INTO PNR_RAW_DATA (  PRD_ID
+			                          , PRD_PCD_ID
+			                          , PRD_TRL_ID
+			                          , PRD_ORIGIN
+			                          , PRD_RAW_PNR
+			                          , PRD_CRE_AGT_CODE
+			                          , PRD_CRE_ID
+			                          , PRD_CRE_NAME
+			                          , PRD_CRE_DATE
+			                          , PRD_LAST_AGT_CODE
+			                          , PRD_LAST_ID
+			                          , PRD_LAST_NAME
+			                          , PRD_LAST_DATE
+			                          ) VALUES (  #{prdId}
+			                                    , #{prdPcdId}
+			                                    , (SELECT MAX(TRL_ID) FROM TKT_REQUEST_LIST WHERE TRL_HREV_CODE = (SELECT PCD_TRL_HREV_CODE FROM PNR_COMMON_DATA WHERE PCD_ID = #{prdId}))
+			                                    , #{prdOrigin}
+			                                    , ' '
+			                                    , #{prdCreAgtCode}
+			                                    , #{prdCreId}
+			                                    , #{prdCreName}
+			                                    , sysdate
+			                                    , #{prdLastAgtCode}
+			                                    , #{prdLastId}
+			                                    , #{prdLastName}
+			                                    , sysdate
+			                                    );
+			                                    
+			UPDATE PNR_RAW_DATA 
+			   SET PRD_RAW_PNR = lv_prdRawPnr
+			 WHERE PRD_ID = #{prdId};
+		End;
+	</insert>
+	
+</mapper>
+
